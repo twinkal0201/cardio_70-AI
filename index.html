@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cardio70 - Machine Learning-Powered Cardiovascular Risk Prediction Dashboard">
+    <title>Cardio70 – Cardiovascular Risk Prediction</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
+                <span class="logo-text">Cardio70</span>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#dashboard" class="nav-item active" data-section="dashboard" data-tooltip="Dashboard">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#patient-input" class="nav-item" data-section="patient-input" data-tooltip="Patient Input">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+                <span>Patient Input</span>
+            </a>
+
+            <a href="#prediction-result" class="nav-item" data-section="prediction-result"
+                data-tooltip="Prediction Result">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+                <span>Prediction Result</span>
+            </a>
+
+
+            <a href="#model-performance" class="nav-item" data-section="model-performance"
+                data-tooltip="Model Performance">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Model Performance</span>
+            </a>
+
+            <a href="#about" class="nav-item" data-section="about" data-tooltip="About Model">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>About Model</span>
+            </a>
+        </nav>
+
+        <div class="user-profile">
+            <div class="user-avatar">
+                <span>EP</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name">Er. T pedhadiya</span>
+                <span class="user-role">Admin</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div style="display: flex; align-items: center;">
+                    <button class="toggle-sidebar-btn" id="toggleSidebar" aria-label="Toggle Navigation">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="24" height="24">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="header-title">
+                        <h1>Cardio70 – Cardiovascular Risk Prediction</h1>
+                        <p class="subtitle">Machine Learning–Powered Health Intelligence</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <div class="profile-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section class="content-section active" id="dashboard-section">
+            <div class="dashboard-grid">
+
+                <div class="glass-card welcome-card">
+                    <span class="welcome-badge">AI Powered</span>
+
+                    <div class="welcome-row">
+                        <div class="welcome-content">
+                            <h2>Welcome to <span>Cardio70</span></h2>
+                            <p>
+                                Advanced cardiovascular disease prediction powered by machine learning.
+                                Our AI model analyzes patient data to deliver fast, reliable risk assessments.
+                            </p>
+                        </div>
+
+                        <button class="btn-primary btn-small" onclick="navigateToSection('patient-input')">
+                            New Prediction
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="glass-card stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #00BCD4, #26C6DA);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Model Accuracy</h3>
+                        <p class="stat-value">73.62%</p>
+                    </div>
+                </div>
+
+                <div class="glass-card stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f4d420, #f4d420);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Response Time</h3>
+                        <p class="stat-value">1.23s</p>
+                    </div>
+                </div>
+
+                <div class="glass-card stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4CAF50, #66BB6A);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Patients Analyzed</h3>
+                        <p class="stat-value">65K+</p>
+                    </div>
+                </div>
+
+                <div class="glass-card stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #FF5252, #FF7043);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>High Risk Detected</h3>
+                        <p class="stat-value">49%</p>
+                    </div>
+                </div>
+
+                <div class="glass-card chart-card">
+                    <h3>Risk Distribution</h3>
+                    <canvas id="riskDistributionChart"></canvas>
+                </div>
+
+                <div class="glass-card chart-card">
+                    <h2>Project Information</h2>
+                    <h3>Project Objective:</h3>
+                    <p>
+                        To predict cardiovascular disease risk (Low / Moderate / High) using
+                        machine learning by
+                        analyzing patient health parameters such as age, blood pressure, cholesterol, glucose,
+                        and lifestyle factors.
+                    </p>
+                    <br>
+                    <h3>Machine Learning Approach:</h3>
+                    <p>
+                        The system uses a trained machine learning model to classify
+                        cardiovascular risk. Feature importance analysis helps explain model decisions, improving
+                        transparency and trust.
+                    </p>
+                    <br>
+                    <h3>Key Features:</h3>
+                    <p>
+                        Real-time risk prediction,Model confidence score,Feature importance
+                        visualization,Confusion matrix
+                    </p>
+
+                </div>
+
+
+            </div>
+        </section>
+
+        <!-- Patient Input Section -->
+        <section class="content-section" id="patient-input-section">
+            <div class="form-container">
+                <div class="glass-card form-card">
+                    <div class="form-header">
+                        <h2>Patient Information</h2>
+                        <p>Enter patient data for cardiovascular risk assessment</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="formProgress"></div>
+                        </div>
+                    </div>
+
+                    <form id="patientForm" class="patient-form">
+                        <div class="form-grid">
+                            <!-- Age -->
+                            <div class="form-group">
+                                <label for="age">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    Age (years)
+                                </label>
+                                <input type="range" id="age" name="age" min="20" max="100" value="50" required
+                                    oninput="document.getElementById('ageValue').textContent = this.value">
+                                <span class="range-value" id="ageValue">50</span>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-group">
+                                <label>
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    Gender
+                                </label>
+                                <div class="toggle-group">
+                                    <input type="radio" id="male" name="gender" value="1" checked>
+                                    <label for="male" class="toggle-option">Male</label>
+                                    <input type="radio" id="female" name="gender" value="0">
+                                    <label for="female" class="toggle-option">Female</label>
+                                </div>
+                            </div>
+
+                            <!-- Height -->
+                            <div class="form-group">
+                                <label for="height">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M12 2v20M2 12h20"></path>
+                                    </svg>
+                                    Height (cm)
+                                </label>
+                                <input type="number" id="height" name="height" min="100" max="250" value="170" required>
+                            </div>
+
+                            <!-- Weight -->
+                            <div class="form-group">
+                                <label for="weight">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                    </svg>
+                                    Weight (kg)
+                                </label>
+                                <input type="number" id="weight" name="weight" min="30" max="200" value="70" required>
+                            </div>
+
+                            <!-- Systolic Blood Pressure -->
+                            <div class="form-group">
+                                <label for="ap_hi">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                    </svg>
+                                    Systolic BP (ap_hi)
+                                </label>
+                                <input type="number" id="ap_hi" name="ap_hi" min="60" max="240" value="120" required>
+                            </div>
+
+                            <!-- Diastolic Blood Pressure -->
+                            <div class="form-group">
+                                <label for="ap_lo">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                    </svg>
+                                    Diastolic BP (ap_lo)
+                                </label>
+                                <input type="number" id="ap_lo" name="ap_lo" min="40" max="180" value="80" required>
+                            </div>
+
+                            <!-- Cholesterol -->
+                            <div class="form-group">
+                                <label for="cholesterol">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M12 2v20M2 12h20"></path>
+                                    </svg>
+                                    Cholesterol (mg/dL)
+                                </label>
+                                <input type="number" id="cholesterol" name="cholesterol" min="50" max="600" value="180"
+                                    required placeholder="Example: 180">
+                                <span class="helper-text">Enter total cholesterol in mg/dL (example: 180)</span>
+                            </div>
+
+                            <!-- Glucose -->
+                            <div class="form-group">
+                                <label for="glucose">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M12 6v6l4 2"></path>
+                                    </svg>
+                                    Glucose (mg/dL)
+                                </label>
+                                <input type="number" id="glucose" name="gluc" min="50" max="600" value="95" required
+                                    placeholder="Example: 95">
+                                <span class="helper-text">Enter fasting glucose level in mg/dL (example: 95)</span>
+                            </div>
+
+                            <!-- Smoking -->
+                            <div class="form-group">
+                                <label>
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                                        <line x1="6" y1="1" x2="6" y2="4"></line>
+                                        <line x1="10" y1="1" x2="10" y2="4"></line>
+                                        <line x1="14" y1="1" x2="14" y2="4"></line>
+                                    </svg>
+                                    Smoking
+                                </label>
+                                <div class="toggle-group">
+                                    <input type="radio" id="smokeNo" name="smoke" value="0" checked>
+                                    <label for="smokeNo" class="toggle-option">No</label>
+                                    <input type="radio" id="smokeYes" name="smoke" value="1">
+                                    <label for="smokeYes" class="toggle-option">Yes</label>
+                                </div>
+                            </div>
+
+                            <!-- Alcohol -->
+                            <div class="form-group">
+                                <label>
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M17 10a7 7 0 1 1-14 0c0-3.3 2.7-6 6-6s6 2.7 6 6z"></path>
+                                        <path d="M22 2v20"></path>
+                                        <path d="M22 17H5"></path>
+                                    </svg>
+                                    Alcohol Intake
+                                </label>
+                                <div class="toggle-group">
+                                    <input type="radio" id="alcoNo" name="alco" value="0" checked>
+                                    <label for="alcoNo" class="toggle-option">No</label>
+                                    <input type="radio" id="alcoYes" name="alco" value="1">
+                                    <label for="alcoYes" class="toggle-option">Yes</label>
+                                </div>
+                            </div>
+
+                            <!-- Physical Activity -->
+                            <div class="form-group">
+                                <label>
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="8.5" cy="7" r="4"></circle>
+                                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                                    </svg>
+                                    Physical Activity
+                                </label>
+                                <div class="toggle-group">
+                                    <input type="radio" id="activeNo" name="active" value="0">
+                                    <label for="activeNo" class="toggle-option">No</label>
+                                    <input type="radio" id="activeYes" name="active" value="1" checked>
+                                    <label for="activeYes" class="toggle-option">Yes</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="resetForm()">Reset Form</button>
+                            <button type="submit" class="btn-primary btn-predict">
+                                <span class="btn-text">Predict Risk</span>
+                                <span class="btn-loader"></span>
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Result Section -->
+        <section class="content-section" id="prediction-result-section">
+            <div class="result-container">
+                <div class="glass-card result-card">
+                    <h2>Prediction Result</h2>
+                    <p class="result-date" id="resultDate"></p>
+
+                    <div class="risk-indicator-container">
+                        <div class="risk-indicator" id="riskIndicator">
+                            <svg class="risk-circle" viewBox="0 0 200 200">
+                                <circle class="risk-bg" cx="100" cy="100" r="90"></circle>
+                                <circle class="risk-progress" cx="100" cy="100" r="90" id="riskProgress"></circle>
+                            </svg>
+                            <div class="risk-content">
+                                <div class="risk-icon" id="riskIcon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <h3 class="risk-level" id="riskLevel">Predict Risk</h3>
+                                <p class="risk-percentage" id="riskPercentage">0%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="confidence-score">
+                        <h4>Model Confidence</h4>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill"></div>
+                        </div>
+                        <p class="confidence-value" id="confidenceValue">0%</p>
+                    </div>
+
+
+
+
+                    <!-- AI Analysis Box -->
+                    <div class="analysis-box">
+                        <h4>AI Analysis</h4>
+                        <p id="aiExplanation">
+                            Based on the provided patient data, the model predicts a low cardiovascular risk
+                            despite some concerns including lifestyle factors (alcohol consumption).
+                            Overall vital signs are stable. Continue maintaining a healthy lifestyle.
+                        </p>
+                    </div>
+
+                    <!-- Medical Disclaimer Box -->
+                    <div class="medical-disclaimer-box">
+                        <div class="disclaimer-icon">!</div>
+                        <p>
+                            <strong>Medical Disclaimer:</strong>
+                            This prediction is generated by an artificial intelligence (AI) model and is intended
+                            for educational and informational purposes only. It is not a medical diagnosis and
+                            should not be used as a substitute for professional medical advice, diagnosis, or
+                            treatment. Always consult a qualified healthcare provider.
+                        </p>
+                    </div>
+
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="navigateToSection('patient-input')">New
+                            Prediction</button>
+                        <button class="btn-primary" onclick="generateReport()">
+                            Generate Analysis
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Analytics Section -->
+        <section class="content-section" id="model-performance-section">
+            <div class="analytics-grid">
+                <div class="glass-card metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #379b46, #379b46);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Accuracy</h3>
+                        <p class="metric-value">73.67%</p>
+                    </div>
+                </div>
+                <div class="glass-card metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #2196F3, #42A5F5);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Precision</h3>
+                        <p class="metric-value">75.27%</p>
+                    </div>
+                </div>
+                <div class="glass-card metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #FF9800, #FF9800);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Recall</h3>
+                        <p class="metric-value">68.12%</p>
+                    </div>
+                </div>
+                <div class="glass-card metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #FF9800, #FFB74D);">
+                        <!-- F1 Score Icon: Star/Award -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>F1 Score</h3>
+                        <p class="metric-value">71.52%</p>
+                    </div>
+                </div>
+
+                <div class="glass-card chart-card full-width">
+                    <h3>Feature Importance</h3>
+                    <canvas id="featureImportanceChart"></canvas>
+                </div>
+
+                <div class="glass-card chart-card">
+                    <h3>Confusion Matrix</h3>
+                    <div class="confusion-matrix">
+                        <div class="cm-cell cm-empty"></div>
+                        <div class="cm-label">Predicted: Low</div>
+                        <div class="cm-label">Predicted: High</div>
+
+                        <div class="cm-label vertical">Actual: Low</div>
+                        <div class="cm-cell tp">
+                            <span class="cm-value">5075</span>
+                            <small>True Negative</small>
+                        </div>
+                        <div class="cm-cell fp">
+                            <span class="cm-value">1357</span>
+                            <small>False Positive</small>
+                        </div>
+
+                        <div class="cm-label vertical">Actual: High</div>
+                        <div class="cm-cell fn">
+                            <span class="cm-value">1933</span>
+                            <small>False Negative</small>
+                        </div>
+                        <div class="cm-cell tn">
+                            <span class="cm-value">4131</span>
+                            <small>True Positive</small>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="glass-card chart-card">
+                    <h3>Risk by Age Group</h3>
+                    <canvas id="riskAgeChart"></canvas>
+                </div>
+
+                <!-- <div class="glass-card model-info-card col-12">
+                    <div class="header">
+                        <h3>Model Information</h3>
+                        <span class="version-badge">v1.2.0</span>
+                    </div> -->
+
+                <!-- <div class="info-grid full-width"> -->
+                <div class="info-item ">
+                    <div class="info-icon-container" style="background: rgba(33, 150, 243, 0.1); color: #2196F3;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                            </path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="info-details">
+                        <span class="info-label">Algorithm</span>
+                        <span class="info-value">Random Forest</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon-container" style="background: rgba(76, 175, 80, 0.1); color: #4CAF50;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="info-details">
+                        <span class="info-label">Training Data</span>
+                        <span class="info-value">70,000 Samples</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon-container" style="background: rgba(255, 152, 0, 0.1); color: #FF9800;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <div class="info-details">
+                        <span class="info-label">Input Features</span>
+                        <span class="info-value">12 Metrics</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon-container" style="background: rgba(156, 39, 176, 0.1); color: #9C27B0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="info-details">
+                        <span class="info-label">Last Updated</span>
+                        <span class="info-value">January 2026</span>
+                    </div>
+                </div>
+                <!-- </div> -->
+                <!-- </div> -->
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- About Model Section -->
+        <section class="content-section" id="about-section">
+            <div class="about-container">
+                <div class="glass-card">
+                    <h2>About Cardio70 Model</h2>
+
+                    <div class="about-content">
+                        <h3>Overview</h3>
+                        <p>Cardio70 uses a state-of-the-art Random Forest machine learning algorithm to predict
+                            cardiovascular disease risk. The model has been trained on a comprehensive dataset of 70,000
+                            patient records.</p>
+
+                        <h3>Input Features</h3>
+                        <ul class="feature-list">
+                            <li><strong>Age:</strong> Patient's age in years</li>
+                            <li><strong>Gender:</strong> Biological sex</li>
+                            <li><strong>Height:</strong> Patient height in cm</li>
+                            <li><strong>Weight:</strong> Patient weight in kg</li>
+                            <li><strong>Systolic BP:</strong> Upper blood pressure reading (mm Hg)</li>
+                            <li><strong>Diastolic BP:</strong> Lower blood pressure reading (mm Hg)</li>
+                            <li><strong>Cholesterol:</strong> Total cholesterol level (mg/dL)</li>
+                            <li><strong>Glucose:</strong> Fasting blood glucose level (mg/dL)</li>
+                            <li><strong>Smoking:</strong> Smoking status</li>
+                            <li><strong>Alcohol:</strong> Alcohol intake status</li>
+                            <li><strong>Physical Activity:</strong> Regular activity status</li>
+                            <li><strong>BMI:</strong> Body Mass Index (Calculated)</li>
+                        </ul>
+
+                        <h3>Model Performance</h3>
+                        <p>The Random Forest model achieves high accuracy with excellent precision and recall metrics,
+                            making it highly reliable for cardiovascular risk assessment.</p>
+
+                        <div class="disclaimer-box">
+                            <h4>Important Notice</h4>
+                            <p>This AI model is intended for educational and research purposes. It should be used as a
+                                supplementary tool alongside professional medical judgment and not as a replacement for
+                                clinical diagnosis or treatment decisions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2026 Cardio70. AI powered</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Support</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="heart-loader">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+            </svg>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
